@@ -1,0 +1,68 @@
+name: Deploy to DigitalOcean
+
+on:
+  push:
+    branches: [ main ]
+  workflow_run:
+    workflows: [ "CI to Docker Hub" ]
+    branches: [ main ]
+    types: [ completed ]
+
+jobs:
+
+  deploy:
+
+    runs-on: ubuntu-latest
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    steps:
+
+      - name: Check Out Repo
+        uses: actions/checkout@v2
+
+      - name: Prepare
+        id: prep
+        run: |
+          DOCKER_IMAGE=${{ secrets.STAHLHANDEL_DOCKER_IMAGE }}
+          VERSION=$(git rev-parse --short "$GITHUB_SHA")
+          TAGS="${DOCKER_IMAGE}:${VERSION}"
+          MONGODB_URL=${{ secrets.MONGODB_URL }}
+          SECRET=${{ secrets.SECRET }}
+          echo ::set-output name=tags::${TAGS}
+      - name: Deploy to Digital Ocean
+        uses: appleboy/ssh-action@master
+        env:
+          SECRET: ${{ secrets.SECRET }}
+          MONGODB_URL: ${{ secrets.MONGODB_URL }}
+          DOCKER_IMAGE: ${{ steps.prep.outputs.tags }}
+        with:
+          host: ${{ secrets.DIGITAL_OCEAN_HOST }}
+          username: ${{ secrets.DIGITAL_OCEAN_USER }}
+          password: ${{ secrets.DIGITAL_OCEAN_PASSWORD }}
+          port: ${{ secrets.DIGITAL_OCEAN_PORT }}
+          envs: SECRET,MONGODB_URL,DOCKER_IMAGE
+          script_stop: true
+          script: |
+            export DOCKER_IMAGE="${{ steps.prep.outputs.tags }}"
+            export MONGODB_URL="${{ secrets.MONGODB_URL }}"
+            export SECRET="${{ secrets.SECRET }}"
+            /root/stahlhandel/run_server_container.sh
+            docker network connect stahlhandel-network server
+
+      - name: Send mail
+        if: always()
+        uses: dawidd6/action-send-mail@v2
+        with:
+          # mail server settings
+          server_address: smtp.gmail.com
+          server_port: 465
+          # user credentials
+          username: ${{ secrets.GMAIL_EMAIL }}
+          password: ${{ secrets.GMAIL_PASSWORD }}
+          # email subject
+          subject: ${{ github.job }} job of ${{ github.repository }} has ${{ job.status }}
+          # email body as text
+          body: ${{ github.job }} job in worflow ${{ github.workflow }} of ${{ github.repository }} has ${{ job.status }}
+          # comma-separated string, send email to
+          to: vcygni@gmail.com
+          # from email name
+          from: Stahlhandel Potsdam Github Actions

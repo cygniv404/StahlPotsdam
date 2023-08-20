@@ -1,0 +1,29 @@
+version: "3.8"
+services:
+  mongodb:
+    image: mongo
+    container_name: database
+    volumes:
+      - ./database:/data/db
+    env_file: .env
+    environment:
+          MONGO_INITDB_ROOT_USERNAME: ${MONGO_INITDB_ROOT_USERNAME}
+          MONGO_INITDB_ROOT_PASSWORD: ${MONGO_INITDB_ROOT_PASSWORD}
+          MONGO_INITDB_DATABASE: ${MONGO_INITDB_DATABASE}
+    ports:
+      - 27017:27017
+    restart: unless-stopped
+  flask:
+    container_name: server
+    build:
+      context: server/
+      target: base
+    working_dir: /app
+    restart: unless-stopped
+    env_file:
+      - .env
+    volumes:
+      - ./server/:/app/
+    ports:
+      - 7777:7777
+    command: python -m flask run --host=0.0.0.0 -p 7777

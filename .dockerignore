@@ -1,0 +1,12 @@
+.git
+Dockerfile
+.DS_Store
+.gitignore
+.dockerignore
+/node_modules
+__pycache__/
+pip-log.txt
+pip-delete-this-directory.txt
+.venv
+server/venv
+*/*.log
