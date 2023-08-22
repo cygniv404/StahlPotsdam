@@ -1,16 +1,18 @@
-''' controller and routes for users '''
 import os
-from flask import request, jsonify
+from flask import g, request, jsonify, current_app as app
+from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (create_access_token, create_refresh_token,
-                                jwt_required, get_jwt_identity)
-from main import app, db, flask_bcrypt, jwt
+                                jwt_required, get_jwt_identity, JWTManager)
 import logging
 
 ROOT_PATH = os.environ.get('ROOT_PATH')
+db = g.mongodb
+flask_bcrypt = Bcrypt(app)
+jwt = JWTManager(app)
 
 
 @jwt.unauthorized_loader
-def unauthorized_response(callback):
+def unauthorized_response():
     return jsonify({
         'ok': False,
         'message': 'Missing Authorization Header in API call.'
