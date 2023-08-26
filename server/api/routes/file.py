@@ -1,9 +1,10 @@
 import json
 
+from bson import ObjectId
 from flask import g, current_app as app, request, jsonify
 from flask_jwt_extended import jwt_required
 
-db = g.mongodb
+db = g.mongodb.stahlpotsdam
 
 
 @app.route('/files', methods=['POST'])

@@ -1,4 +1,4 @@
-FROM python:3.9-slim AS base
+FROM python:3.11-slim AS base
 RUN apt-get update && apt-get upgrade -y
 RUN adduser --system --group --no-create-home app
 WORKDIR /app
@@ -7,9 +7,9 @@ RUN pip install -r requirements.txt
 COPY . .
 RUN chown -R app:app /app
 
-FROM python:3.9-slim AS production
+FROM python:3.11-slim AS production
 COPY --from=base /app/ /app
-COPY --from=base /usr/local/lib/python3.9 /usr/local/lib/python3.9
+COPY --from=base /usr/local/lib/python3.11 /usr/local/lib/python3.11
 RUN pip install gunicorn
 RUN pip install gevent
 EXPOSE 8080

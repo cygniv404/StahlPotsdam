@@ -1,7 +1,18 @@
 import datetime
 
 
-def _filter(text, filter_operator, filter_word):
+def _filter(_list, filter_word, filter_operator, filter_column):
+    return [c for c in _list if
+            (filter_word == '' and filter_column in ['isEmpty', 'isNotEmpty'])
+            or (filter_word == '' and filter_operator in ['=', '!=', '<', '<=', '>=', '>'])
+            or filter_operator == ''
+            or filter_column == ''
+            or filter_word == '' and filter_operator in ['is', 'not', 'before', 'onOrBefore', 'after',
+                                                         'onOrAfter']
+            or search(c[filter_column], filter_operator, filter_word)]
+
+
+def search(text, filter_operator, filter_word):
     def _contains():
         return True if filter_word in str(text) else False
 

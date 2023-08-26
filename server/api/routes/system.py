@@ -3,7 +3,7 @@ from flask import g, current_app as app
 from flask_jwt_extended import jwt_required
 from pymongo import ASCENDING
 
-db = g.mongodb
+db = g.mongodb.stahlpotsdam
 
 
 @app.route('/system', methods=['GET'])
