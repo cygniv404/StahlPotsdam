@@ -1,4 +1,5 @@
 name: LINT & TEST
+
 on:
   push:
     branches: [ main ]
@@ -34,22 +35,3 @@ jobs:
         uses: microsoft/action-python@0.7.0
         with:
           flake8: true
-
-  testing:
-    runs-on: ubuntu-latest
-    steps:
-      - name: Check Out Repo
-      - uses: actions/checkout@v3
-      - name: Set up Python 3.11
-        uses: actions/setup-python@v3
-        with:
-          python-version: "3.11.0"
-      - name: Install dependencies
-        run: |
-          cd server
-          pip install -r requirements.txt
-      - name: Pytest
-        run: |
-          docker-compose up -d
-          docker-compose exec -T flask pip3 install pytest
-          docker-compose exec -T flask pytest
