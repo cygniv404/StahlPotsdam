@@ -28,7 +28,8 @@ def get_all_materials():
     filtered_result = _filter(result, filter_word, filter_operator, filter_column)
     sorted_result = sorted(filtered_result,
                            key=lambda el: _sort(el, sort_column),
-                           reverse=True if sort_order != 'asc' else False) if sort_column != '' else filtered_result
+                           reverse=True if sort_order != 'asc' else False) if sort_column != '' else (
+        filtered_result)
     return json.dumps(
         {'rows': sorted_result[page * page_size:(page + 1) * page_size],
          'count': len(sorted_result)}, default=str)
@@ -54,7 +55,9 @@ def save_material():
     new_article_stock = article['stock'] + float(new_material['amount'])
     new_article_purchase_price = (float(new_material['price']) + article['purchase_price']) / 2
     db.articles.update_one({'id': new_material['article_id']},
-                           {'$set': {'stock': new_article_stock, 'purchase_price': new_article_purchase_price}})
+                           {'$set': {'stock': new_article_stock,
+                                     'purchase_price': new_article_purchase_price
+                                     }})
     db.incoming_materials.insert_one(new_material)
     return json.dumps({"id": new_material['id']}, default=str)
 
