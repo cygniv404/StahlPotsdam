@@ -26,4 +26,4 @@ services:
       - ./server/:/app/
     ports:
       - 7777:7777
-    command: exec python -m flask run --host=0.0.0.0 -p 7777
+    command: python -m flask run --host=0.0.0.0 -p 7777

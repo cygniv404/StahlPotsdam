@@ -26,6 +26,8 @@ jobs:
         run: docker-compose up -d
       - name: Pytest
         run: |
+          docker ps
+          docker inspect
           docker-compose exec -T flask pip3 install pytest
           docker-compose exec -T flask pytest
 
