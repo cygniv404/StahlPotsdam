@@ -23,9 +23,10 @@ jobs:
           cd server
           pip install -r requirements.txt
           echo "${{ secrets.ENV_SERVER_DEV_FILE }}" > .env
+      - name: Build the stack
+        run: docker-compose up -d
       - name: Pytest
         run: |
-          docker-compose up -d
           docker-compose exec -T flask pip3 install pytest
           docker-compose exec -T flask pytest
 
