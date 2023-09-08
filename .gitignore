@@ -6,7 +6,6 @@ app.spec
 __pycache__
 
 # debug
-npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
 
@@ -23,12 +22,15 @@ yarn-error.log*
 /build
 /database
 /server/venv
+server/logs/
 /dist
 /resources/app
 /resources/app.app
 
 # misc
 .DS_Store
+/*/*.idea
+.idea
 /server/.env
 .env
 .env.local

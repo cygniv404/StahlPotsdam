@@ -2,7 +2,7 @@ import logging
 
 from flask_cors import CORS
 from flask import g
-from app import create_app
+from flask_app import create_app
 from database import init_db
 
 logging.basicConfig(filename='logs/debug.log', level=logging.INFO,
