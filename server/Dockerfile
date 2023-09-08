@@ -5,7 +5,7 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-RUN touch "/app/logs/debug.log"
+RUN echo "" >> /app/logs/debug.log
 RUN chown -R app:app /app
 
 FROM python:3.11-slim AS production
