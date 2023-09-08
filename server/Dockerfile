@@ -5,7 +5,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN pip install -r requirements.txt
 COPY . .
-RUN mkdir /app/logs
 RUN echo "" > /app/logs/debug.log
 RUN ls -la /app/
 RUN chown -R app:app /app
