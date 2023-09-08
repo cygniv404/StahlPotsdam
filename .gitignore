@@ -22,7 +22,7 @@ yarn-error.log*
 /build
 /database
 /server/venv
-server/logs/debug.log
+/*/*.log
 /dist
 /resources/app
 /resources/app.app
