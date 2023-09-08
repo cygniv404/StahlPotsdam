@@ -25,7 +25,7 @@ jobs:
       - name: Build the stack
         env:
           COMPOSE_INTERACTIVE_NO_CLI: 1
-        run: docker-compose up -d
+        run: docker-compose up
       - name: Pytest
         env:
           COMPOSE_INTERACTIVE_NO_CLI: 1
