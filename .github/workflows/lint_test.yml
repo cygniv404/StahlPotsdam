@@ -23,11 +23,15 @@ jobs:
           cd server
           echo "${{ secrets.ENV_SERVER_DEV_FILE }}" > .env
       - name: Build the stack
+        env:
+          COMPOSE_INTERACTIVE_NO_CLI: 1
         run: docker-compose up -d
       - name: Pytest
+        env:
+          COMPOSE_INTERACTIVE_NO_CLI: 1
         run: |
-          docker-compose exec -T flask pip3 install pytest
-          docker-compose exec -T flask pytest
+          docker-compose exec flask pip3 install pytest
+#          docker-compose exec flask pytest
 
 #TODO: FIX Pylint Issues and reactivate lint job.
 #  linting:
