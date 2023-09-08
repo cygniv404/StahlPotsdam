@@ -1,12 +1,12 @@
 name: CI to Docker Hub
 
 on:
-  push:
-    branches: [ main ]
-    paths:
-      - '**.py'
-#  pull_request:
+#  push:
 #    branches: [ main ]
+#    paths:
+#      - '**.py'
+##  pull_request:
+##    branches: [ main ]
 
 jobs:
 

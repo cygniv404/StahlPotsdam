@@ -1,27 +1,26 @@
-import os
 from flask import g, request, jsonify, current_app as app
 from flask_bcrypt import Bcrypt
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, get_jwt_identity, JWTManager)
 import logging
 
-ROOT_PATH = os.environ.get('ROOT_PATH')
-db = g.mongodb
+db = g.mongodb.stahlpotsdam
 flask_bcrypt = Bcrypt(app)
 jwt = JWTManager(app)
 
 
 @jwt.unauthorized_loader
-def unauthorized_response():
+def unauthorized_response(e):
     return jsonify({
         'ok': False,
-        'message': 'Missing Authorization Header in API call.'
+        'message': 'Missing Authorization Header in API call.',
+        'error': e
     }), 401
 
 
 @app.route('/status', methods=['GET'])
 @jwt_required()
-def test_auth():
+def check_auth_status():
     logging.debug('User  is Logged In')
     return jsonify({'ok': True, 'message': 'User is logged in'}), 200
 
@@ -31,7 +30,6 @@ def auth_user():
     """ auth endpoint """
     data = request.json
     user_account = db.users.find_one({'name': data['name']}, {"_id": 0})
-    logging.debug(user_account)
     if user_account and flask_bcrypt.check_password_hash(user_account['password'], data['password']):
         del user_account['password']
         access_token = create_access_token(identity=data)

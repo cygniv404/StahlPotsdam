@@ -4,7 +4,7 @@ from flask import g, current_app as app, request, jsonify
 from flask_jwt_extended import jwt_required
 from pymongo import DESCENDING, ASCENDING
 
-db = g.mongodb
+db = g.mongodb.stahlpotsdam
 
 
 @app.route('/offer/<int:offer_id>', methods=['GET'])
@@ -98,8 +98,8 @@ def create_and_update_offer(offer_id):
         db.orders.insert_one(order)
         return jsonify({'id': last_order_id})
     else:
-        # update
         if db.offers.find_one({"id": offer_id}) is not None:
+            # update
             offer = {
                 'client_id': data['clientId'],
                 'client_alias': data['alias'],

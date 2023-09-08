@@ -1,0 +1,63 @@
+name: LINT & TEST
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  testing:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check Out Repo
+        uses: actions/checkout@v3
+      - name: Set up Python 3.11
+        uses: actions/setup-python@v3
+        with:
+          python-version: "3.11.0"
+      - name: Add Env Variables
+        run: |
+          echo "${{ secrets.ENV_DEV_FILE }}" > .env
+          cd server
+          echo "${{ secrets.ENV_SERVER_DEV_FILE }}" > .env
+      - name: Build the stack
+        env:
+          COMPOSE_INTERACTIVE_NO_CLI: 1
+        run: docker-compose up -d
+      - name: Pytest
+        env:
+          COMPOSE_INTERACTIVE_NO_CLI: 1
+        run: |
+          docker-compose exec -T flask pip3 install pytest
+          docker-compose exec -T flask pytest
+
+#TODO: FIX Pylint Issues and reactivate lint job.
+#  linting:
+#    runs-on: ubuntu-latest
+#    steps:
+#      - name: Black
+#        uses: microsoft/action-python@0.7.0
+#        with:
+#          black: true
+#
+#      - name: Bandit
+#        uses: microsoft/action-python@0.7.0
+#        with:
+#          bandit: true
+#
+#      - name: Pylint
+#        uses: microsoft/action-python@0.7.0
+#        with:
+#          pylint: true
+#
+#      - name: Pyright
+#        uses: microsoft/action-python@0.7.0
+#        with:
+#          pyright: true
+#
+#      - name: Flake8
+#        uses: microsoft/action-python@0.7.0
+#        with:
+#          flake8: true

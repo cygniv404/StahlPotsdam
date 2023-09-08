@@ -6,7 +6,7 @@ from pymongo import DESCENDING
 
 from api._helpers import _filter, _sort
 
-db = g.mongodb
+db = g.mongodb.stahlpotsdam
 
 
 def get_amounts(rows):
@@ -45,14 +45,7 @@ def get_all_incoming_invoices():
     for i in invoices:
         result.append(i)
 
-    filtered_result = [i for i in result if
-                       (filter_word == '' and filter_column in ['isEmpty', 'isNotEmpty'])
-                       or (filter_word == '' and filter_operator in ['=', '!=', '<', '<=', '>=', '>'])
-                       or filter_operator == ''
-                       or filter_column == ''
-                       or filter_word == '' and filter_operator in ['is', 'not', 'before', 'onOrBefore', 'after',
-                                                                    'onOrAfter']
-                       or _filter(i[filter_column], filter_operator, filter_word)]
+    filtered_result = _filter(result, filter_word, filter_operator, filter_column)
     sorted_result = sorted(filtered_result,
                            key=lambda el: _sort(el, sort_column),
                            reverse=True if sort_order != 'asc' else False) if sort_column != '' else filtered_result
