@@ -30,7 +30,7 @@ jobs:
         env:
           COMPOSE_INTERACTIVE_NO_CLI: 1
         run: |
-          docker-compose exec flask pip3 install pytest
+          sudo docker-compose exec flask pip3 install pytest
 #          docker-compose exec flask pytest
 
 #TODO: FIX Pylint Issues and reactivate lint job.
