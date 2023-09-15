@@ -1,4 +1,4 @@
-const [ , , script, command ] = process.argv;
+const [, , script, command] = process.argv;
 const { existsSync, readdirSync } = require('fs');
 const path = require('path');
 
@@ -6,31 +6,6 @@ const { Builder } = require('./build');
 const { Cleaner } = require('./clean');
 const { Packager } = require('./package');
 const { Starter } = require('./start');
-
-
-/**
- * @namespace Dispatcher
- * @description - Dispatches script commands to various scripts.
- * @argument script - Script manager to use (e.g., build or package).
- * @argument command - Command argument describing exact script to run.
- */
-
-switch (script) {
-  case 'build':
-    return buildApp();
-
-  case 'clean':
-    return cleanProject();
-
-  case 'package':
-    return packageApp();
-
-  case 'start':
-    return startDeveloperMode();
-
-  // no default
-}
-
 
 /**
  * @description - Builds various production builds (e.g., Python, React).
@@ -49,10 +24,30 @@ function buildApp() {
     case 'all':
       return builder.buildAll();
 
-    // no default
+      // no default
   }
 }
 
+/**
+ * @description - Builds various installers (e.g., DMG, MSI).
+ * @memberof Dispatcher
+ */
+function packageApp() {
+  const packager = new Packager();
+
+  switch (command) {
+    case 'linux':
+      return packager.packageLinux();
+
+    case 'mac':
+      return packager.packageMacOS();
+
+    case 'windows':
+      return packager.packageWindows();
+
+      // no default
+  }
+}
 
 /**
  * @description - Cleans project by removing various files and folders.
@@ -90,11 +85,10 @@ function cleanProject() {
     getPath('docs'),
 
     // Misc
-    getPath('.DS_Store')
+    getPath('.DS_Store'),
   ]
-    // Iterate and remove process
+  // Iterate and remove process
     .forEach(cleaner.removePath);
-
 
   /**
    * Remove resources/app if it exists, then if the resources
@@ -104,7 +98,6 @@ function cleanProject() {
   const isResourcesDirExist = existsSync(resourcesDir);
 
   if (isResourcesDirExist) {
-
     // Remove 'resources/app' directory if it exists
     const resourcesAppDir = path.join(resourcesDir, 'app');
     const isResourcesAppDir = existsSync(resourcesAppDir);
@@ -121,33 +114,28 @@ function cleanProject() {
 
 
 /**
- * @description - Builds various installers (e.g., DMG, MSI).
- * @memberof Dispatcher
- */
-function packageApp() {
-  const packager = new Packager();
-
-  switch (command) {
-    case 'linux':
-      return packager.packageLinux();
-
-    case 'mac':
-      return packager.packageMacOS();
-
-    case 'windows':
-      return packager.packageWindows();
-
-    // no default
-  }
-}
-
-
-/**
  * @description - Starts developer mode of app.
  * Including; React, Electron, and Python/Flask.
  * @memberof Dispatcher
  */
-function startDeveloperMode() {
+async function startDeveloperMode() {
   const start = new Starter();
-  start.developerMode();
+  await start.developerMode();
+}
+
+/**
+ * @namespace Dispatcher
+ * @description - Dispatches script commands to various scripts.
+ * @argument script - Script manager to use (e.g., build or package).
+ * @argument command - Command argument describing exact script to run.
+ */
+
+if (script === 'build') {
+  buildApp();
+} else if (script === 'clean') {
+  cleanProject();
+} else if (script === 'package') {
+  packageApp();
+} else if (script === 'start') {
+  startDeveloperMode();
 }

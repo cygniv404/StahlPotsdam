@@ -13,5 +13,5 @@ export const app = {
   maximize: () => ipcRenderer.send('app-maximize'),
   minimize: () => ipcRenderer.send('app-minimize'),
   quit: () => ipcRenderer.send('app-quit'),
-  unmaximize: () => ipcRenderer.send('app-unmaximize')
+  unmaximize: () => ipcRenderer.send('app-unmaximize'),
 };
