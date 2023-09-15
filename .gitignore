@@ -22,14 +22,15 @@ yarn-error.log*
 /build
 /database
 /server/venv
-/*/*.log
+/server/.pytest_cache
+/server/logs/debug.log
 /dist
 /resources/app
 /resources/app.app
 
 # misc
 .DS_Store
-/*/*.idea
+/server/.idea
 .idea
 /server/.env
 .env

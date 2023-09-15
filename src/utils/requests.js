@@ -1,7 +1,7 @@
 // Electron Inter Process Communication and dialog
-const {ipcRenderer} = window.require('electron');
-const isDevMode = window.require('electron-is-dev');
-const baseUrl = isDevMode ? 'localhost:7777' : '104.248.131.211';
+const { ipcRenderer } = window.require('electron');
+const isDev = window.require('electron-is-dev');
+const baseUrl = isDev ? 'localhost:7777' : '104.248.131.211';
 // Dynamically generated TCP (open) port between 3000-3999
 // const port = ipcRenderer.sendSync('get-port-number');
 const settings = ipcRenderer.sendSync('get-user-settings');
@@ -21,16 +21,13 @@ const userToken = settings.user.token;
  * @return response data from Python/Flask service.
  * @memberof Requests
  */
-export const get = (route, callback, errorCallback, token = null) => {
-    return fetch(`http://${baseUrl}/${route}`, {
-        method: 'GET',
-        headers: {'Content-type': 'application/json', 'Authorization': `Bearer ${token ?? userToken}`}
-    })
-        .then((response) => response.json())
-        .then(callback)
-        .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
-};
-
+export const get = (route, callback, errorCallback, token = null) => fetch(`http://${baseUrl}/${route}`, {
+  method: 'GET',
+  headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token ?? userToken}` },
+})
+  .then((response) => response.json())
+  .then(callback)
+  .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
 
 /**
  * @description - Helper POST method for sending requests to and from the Python/Flask services.
@@ -43,21 +40,19 @@ export const get = (route, callback, errorCallback, token = null) => {
  * @memberof Requests
  */
 export const post = (
-    body,
-    route,
-    callback,
-    errorCallback,
-    token = null,
-) => {
-    return fetch(`http://${baseUrl}/${route}`, {
-        body: JSON.stringify(body),
-        method: 'POST',
-        headers: {'Content-type': 'application/json', 'Authorization': `Bearer ${token ?? userToken}`}
-    })
-        .then((response) => response.json())
-        .then(callback)
-        .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
-};
+  body,
+  route,
+  callback,
+  errorCallback,
+  token = null,
+) => fetch(`http://${baseUrl}/${route}`, {
+  body: JSON.stringify(body),
+  method: 'POST',
+  headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token ?? userToken}` },
+})
+  .then((response) => response.json())
+  .then(callback)
+  .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
 
 /**
  * @description - Helper PUT method for sending requests to and from the Python/Flask services.
@@ -70,20 +65,20 @@ export const post = (
  * @memberof Requests
  */
 export const put = (
-    body,
-    route,
-    callback,
-    errorCallback,
-    token = null,
+  body,
+  route,
+  callback,
+  errorCallback,
+  token = null,
 ) => {
-    fetch(`http://${baseUrl}/${route}`, {
-        body: JSON.stringify(body),
-        method: 'PUT',
-        headers: {'Content-type': 'application/json', 'Authorization': `Bearer ${token ?? userToken}`}
-    })
-        .then((response) => response.json())
-        .then(callback)
-        .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
+  fetch(`http://${baseUrl}/${route}`, {
+    body: JSON.stringify(body),
+    method: 'PUT',
+    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token ?? userToken}` },
+  })
+    .then((response) => response.json())
+    .then(callback)
+    .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
 };
 
 /**
@@ -97,18 +92,18 @@ export const put = (
  * @memberof Requests
  */
 export const dlt = (
-    body,
-    route,
-    callback,
-    errorCallback,
-    token = null
+  body,
+  route,
+  callback,
+  errorCallback,
+  token = null,
 ) => {
-    fetch(`http://${baseUrl}/${route}`, {
-        body: JSON.stringify(body),
-        method: 'DELETE',
-        headers: {'Content-type': 'application/json', 'Authorization': `Bearer ${token ?? userToken}`}
-    })
-        .then((response) => response.json())
-        .then(callback)
-        .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
+  fetch(`http://${baseUrl}/${route}`, {
+    body: JSON.stringify(body),
+    method: 'DELETE',
+    headers: { 'Content-type': 'application/json', Authorization: `Bearer ${token ?? userToken}` },
+  })
+    .then((response) => response.json())
+    .then(callback)
+    .catch((error) => (errorCallback ? errorCallback(error) : console.error(error)));
 };

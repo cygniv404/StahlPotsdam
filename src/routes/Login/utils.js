@@ -1,17 +1,10 @@
-import React from 'react';
-import {get, post} from "../../utils/requests";
+import { post } from '../../utils/requests';
 
-export const authUser = async ({name, password}) => {
-    return await post({name, password}, 'auth', (data) => {
-        if (data.ok) {
-            return data.data
-        }
-        return null;
-    }, null)
-}
+export const authUser = async ({ name, password }) => post({ name, password }, 'auth', (data) => {
+  if (data.ok) {
+    return data.data;
+  }
+  return null;
+}, null);
 
-export const refreshToken = async (token) => {
-    return await post({}, 'refresh', (data) => {
-        return data.data?.token ?? null;
-    }, null, token)
-}
+export const refreshToken = async (token) => post({}, 'refresh', (data) => data.data?.token ?? null, null, token);

@@ -1,21 +1,45 @@
-from flask import g, request, jsonify, current_app as app
-from flask_bcrypt import Bcrypt
+from flask import g, request, jsonify, Response, current_app as app
 from flask_jwt_extended import (create_access_token, create_refresh_token,
                                 jwt_required, get_jwt_identity, JWTManager)
+from main import jwt, flask_bcrypt
 import logging
+import json
 
 db = g.mongodb.stahlpotsdam
-flask_bcrypt = Bcrypt(app)
-jwt = JWTManager(app)
 
 
-@jwt.unauthorized_loader
-def unauthorized_response(e):
-    return jsonify({
-        'ok': False,
-        'message': 'Missing Authorization Header in API call.',
-        'error': e
-    }), 401
+@jwt.invalid_token_loader
+def invalid_token_loader_response(invalid_token):
+    return Response(
+        response=json.dumps({
+            "message": "Invalid token"
+        }),
+        status=422,
+        mimetype='application/json'
+    )
+
+
+@jwt.expired_token_loader
+def expired_token_callback(jwt_header, jwt_payload):
+    return Response(
+        response=json.dumps({
+            "message": "The token has expired."
+        }),
+        status=401,
+        mimetype='application/json'
+    )
+
+
+@jwt.invalid_token_loader
+def my_invalid_token_loader_response(error):
+    return Response(
+        response=json.dumps({
+            "message": "Missing Authorization Header in API call.",
+            "error": error
+        }),
+        status=401,
+        mimetype='application/json'
+    )
 
 
 @app.route('/status', methods=['GET'])

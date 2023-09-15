@@ -1,26 +1,31 @@
 import 'index.scss';
 
 import * as serviceWorker from 'serviceWorker';
-import {MuiThemeProvider} from '@material-ui/core/styles';
+import { ThemeProvider } from '@mui/styles';
+import { createRoot } from 'react-dom/client';
 
 import App from 'components/App';
 import React from 'react';
-import ReactDOM from 'react-dom';
-import {CssBaseline} from "@material-ui/core";
-import theme from "./theme/theme";
-import MenuProvider from "./state/menuContext";
+import { CssBaseline } from '@mui/material';
+import theme from './theme/theme';
+import MenuProvider from './state/menuContext';
 
-ReactDOM.render(
+function AppWithThemeProvider() {
+  return (
     <React.StrictMode>
-        <MuiThemeProvider theme={theme}>
-            <CssBaseline/>
-            <MenuProvider>
-                <App/>
-            </MenuProvider>
-        </MuiThemeProvider>
-    </React.StrictMode>,
-    document.getElementById('root')
-);
+      <ThemeProvider theme={theme}>
+        <CssBaseline />
+        <MenuProvider>
+          <App />
+        </MenuProvider>
+      </ThemeProvider>
+    </React.StrictMode>
+  );
+}
+
+const container = document.getElementById('root');
+const root = createRoot(container);
+root.render(<AppWithThemeProvider />);
 
 // If you want your app to work offline and load faster, you can change
 // unregister() to register() below. Note this comes with some pitfalls.
