@@ -12,7 +12,7 @@
 <h3 align="center">Inventory Management System</h3>
 
   <p align="center">
-    An awesome README template to jumpstart your projects!
+    Real-time Inventory Tracking · Product Information Management · Supplier Management · User Access Control · Reporting and Analytics
     <br />
     <a href="https://github.com/cygniv404/StahlPotsdam"><strong>Explore the docs »</strong></a>
     <br />
